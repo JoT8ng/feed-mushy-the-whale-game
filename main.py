@@ -13,7 +13,25 @@ dt = 0
 background = pygame.image.load("assets/MushyGameBackground.jpg")
 background = pygame.transform.scale(background, (1280, 720))
 
-player_rect = pygame.Rect(screen.get_width() / 2, screen.get_height() / 2, 40, 40)
+NUM_FRAMES = 2
+player_frames = [pygame.image.load(f"assets/frames/MushyCharacter_{i}.png") for i in range(NUM_FRAMES)]
+player_rect = player_frames[0].get_rect()
+# Calculate the center of the screen
+screen_center_x = screen.get_width() // 2
+screen_center_y = screen.get_height() // 2
+# Set the initial position of the player at the center of the screen
+player_rect.center = (screen_center_x, screen_center_y)
+
+# Load player animation frames
+current_frame = 0
+frame_counter = 0
+ANIMATION_SPEED = 7
+# Set the initial player image
+player_image = player_frames[current_frame]
+
+# Initial player direction
+player_direction = 'right'
+
 fish_list = pygame.sprite.Group()
 fish_generation_timer = 0
 
@@ -36,8 +54,19 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.blit(background, (0, 0))
 
-    # RENDER YOUR GAME HERE
-    pygame.draw.rect(screen, "red", player_rect)
+    # Animate player
+    frame_counter += 1
+    if frame_counter >= ANIMATION_SPEED:
+        frame_counter = 0
+        current_frame = (current_frame + 1) % NUM_FRAMES
+    player_image = player_frames[current_frame]
+
+    # Draw Player
+    if player_direction == 'right':
+        screen.blit(player_image, player_rect)
+    else:  # Flip the image horizontally if the player is facing left
+        flipped_player_image = pygame.transform.flip(player_image, True, False)
+        screen.blit(flipped_player_image, player_rect)
     
     # Update and draw all fish
     fish_list.update()
@@ -52,13 +81,19 @@ while running:
     # Game controls setup
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
-        player_rect.y -= 300 * dt
+        if player_rect.top > 0:
+            player_rect.y -= 300 * dt
     if keys[pygame.K_s]:
-        player_rect.y += 300 * dt
+        if player_rect.bottom < screen.get_height():
+            player_rect.y += 300 * dt
     if keys[pygame.K_a]:
-        player_rect.x -= 300 * dt
+        if player_rect.left > 0:
+            player_rect.x -= 300 * dt
+            player_direction = 'left'
     if keys[pygame.K_d]:
-        player_rect.x += 300 * dt
+        if player_rect.right < screen.get_width():
+            player_rect.x += 300 * dt
+            player_direction = 'right'
 
     # flip() the display to put your work on screen
     pygame.display.flip()
