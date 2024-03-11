@@ -13,15 +13,18 @@ dt = 0
 background = pygame.image.load("assets/MushyGameBackground.jpg")
 background = pygame.transform.scale(background, (1280, 720))
 
-player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
-player_radius = 40
-fish = Fish(screen)
-fish_list = []
+player_rect = pygame.Rect(screen.get_width() / 2, screen.get_height() / 2, 40, 40)
+fish_list = pygame.sprite.Group()
 fish_generation_timer = 0
+
+# Initialize fish sprites
+for _ in range(4):
+    fish = Fish(screen)
+    fish_list.add(fish)
 
 while running:
     if fish_generation_timer > 300:
-        fish_list.append(Fish(screen))
+        fish_list.add(Fish(screen))
         fish_generation_timer = 0
 
     # poll for events
@@ -34,28 +37,28 @@ while running:
     screen.blit(background, (0, 0))
 
     # RENDER YOUR GAME HERE
-    pygame.draw.circle(screen, "red", player_pos, 40)
+    pygame.draw.rect(screen, "red", player_rect)
     
-    # Draw all apples
-    for simple_fish in fish_list:
-        simple_fish.fall()  
-        simple_fish.draw()
+    # Update and draw all fish
+    fish_list.update()
+    fish_list.draw(screen)
 
-        if Fish.check_collision(simple_fish, player_pos, player_radius):
+    # Check collision with fish
+    for fish in fish_list:
+        if fish.check_collision(player_rect):
             print("Collision detected!")
-            # Handle the collision (e.g., reset the apple, update the score, etc.)
-            fish_list.remove(simple_fish)  # Example: remove the apple from the list
+            fish_list.remove(fish) 
 
     # Game controls setup
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
-        player_pos.y -= 300 * dt
+        player_rect.y -= 300 * dt
     if keys[pygame.K_s]:
-        player_pos.y += 300 * dt
+        player_rect.y += 300 * dt
     if keys[pygame.K_a]:
-        player_pos.x -= 300 * dt
+        player_rect.x -= 300 * dt
     if keys[pygame.K_d]:
-        player_pos.x += 300 * dt
+        player_rect.x += 300 * dt
 
     # flip() the display to put your work on screen
     pygame.display.flip()
