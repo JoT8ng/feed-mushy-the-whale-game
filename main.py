@@ -3,6 +3,7 @@ import pygame
 from fish import Fish
 from player import Player
 from shark import Shark
+from score import Score
 
 # pygame setup
 pygame.init()
@@ -17,6 +18,8 @@ background = pygame.transform.scale(background, (1280, 720))
 
 player = Player(screen)
 
+score_manager = Score(screen)
+
 fish_list = pygame.sprite.Group()
 fish_generation_timer = 0
 
@@ -28,12 +31,12 @@ for _ in range(4):
     fish_list.add(fish)
 
 # Initialize shark sprites
-for _ in range(3):
+for _ in range(2):
     shark = Shark(screen)
     shark_list.add(shark)
 
 while running:
-    if fish_generation_timer > 200:
+    if fish_generation_timer > 100:
         fish_list.add(Fish(screen))
         fish_generation_timer = 0
 
@@ -65,7 +68,18 @@ while running:
     for fish in fish_list:
         if fish.check_collision(player.player_rect):
             print("Collision detected!")
-            fish_list.remove(fish) 
+            fish_list.remove(fish)
+            score_manager.update('fish')
+
+    # Check collision with player
+    for shark in shark_list:
+        if shark.check_collision(player.player_rect):
+            print("Player eaten by shark!")
+            player.reset_position()
+            score_manager.update('shark')
+
+    # Draw the score
+    score_manager.draw()
 
     # Game controls setup
     keys = pygame.key.get_pressed()

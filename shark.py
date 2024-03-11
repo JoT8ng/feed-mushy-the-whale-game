@@ -55,3 +55,7 @@ class Shark(pygame.sprite.Sprite):
         else:  # Flip the image horizontally if the player is facing left
             flipped_player_image = pygame.transform.flip(self.shark_image, True, False)
             self.screen.blit(flipped_player_image, self.shark_rect)
+
+    def check_collision(self, player_rect):
+        # Check collision with the player's rect
+        return self.shark_rect.colliderect(player_rect)

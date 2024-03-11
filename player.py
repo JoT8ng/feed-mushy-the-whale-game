@@ -27,17 +27,17 @@ class Player:
     def update(self, dt, keys):
         if keys[pygame.K_w]:
             if self.player_rect.top > 0:
-                self.player_rect.y -= 300 * dt
+                self.player_rect.y -= 400 * dt
         if keys[pygame.K_s]:
             if self.player_rect.bottom < self.screen.get_height():
-                self.player_rect.y += 300 * dt
+                self.player_rect.y += 400 * dt
         if keys[pygame.K_a]:
             if self.player_rect.left > 0:
-                self.player_rect.x -= 300 * dt
+                self.player_rect.x -= 400 * dt
                 self.player_direction = 'left'
         if keys[pygame.K_d]:
             if self.player_rect.right < self.screen.get_width():
-                self.player_rect.x += 300 * dt
+                self.player_rect.x += 400 * dt
                 self.player_direction = 'right'
 
         self.animate()
@@ -57,3 +57,7 @@ class Player:
         else:  # Flip the image horizontally if the player is facing left
             flipped_player_image = pygame.transform.flip(self.player_image, True, False)
             self.screen.blit(flipped_player_image, self.player_rect)
+
+    def reset_position(self):
+        # Reset player position to the initial position
+        self.player_rect.center = (self.screen_center_x, self.screen_center_y)
