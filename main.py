@@ -1,9 +1,9 @@
-# Example file showing a basic pygame "game loop"
 import pygame
 from fish import Fish
 from player import Player
 from shark import Shark
 from score import Score
+from menu import show_title_screen
 
 # pygame setup
 pygame.init()
@@ -35,6 +35,10 @@ for _ in range(2):
     shark = Shark(screen)
     shark_list.add(shark)
 
+# Show title screen
+show_title_screen(screen, clock)
+
+# Main game loop
 while running:
     if fish_generation_timer > 100:
         fish_list.add(Fish(screen))
