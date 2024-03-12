@@ -12,8 +12,9 @@ Created while attending MLH Global Hack Week Games
 ### Play on Windows
 Download `MushyWhaleGame.zip` and open `MushyWhaleGame.exe`
 
-### Play on the Web
+### Web Link
 https://jot8ng.itch.io/feed-mushy-the-whale
+Playing the game on the web is currently work in progress!
 
 ## Getting Started:
 Install requirements.txt to install correct python version and pygame (I used Python 3.11.8)
