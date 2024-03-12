@@ -4,6 +4,7 @@ from player import Player
 from shark import Shark
 from score import Score
 from menu import show_title_screen
+import asyncio
 
 # pygame setup
 pygame.init()
@@ -42,69 +43,78 @@ shark_sfx = pygame.mixer.Sound("assets/sound/mixkit-arcade-retro-jump-223.wav")
 # Show title screen
 show_title_screen(screen, clock)
 
-# Main game loop
-while running:
-    if fish_generation_timer > 100:
-        fish_list.add(Fish(screen))
-        fish_generation_timer = 0
+async def main():
+    global fish_generation_timer
+    dt = 0
+    running = True
+    # Main game loop
+    while running:
+        if fish_generation_timer > 100:
+            fish_list.add(Fish(screen))
+            fish_generation_timer = 0
 
-    # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+        # poll for events
+        # pygame.QUIT event means the user clicked X to close your window
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-    # fill the screen with a color to wipe away anything from last frame
-    screen.blit(background, (0, 0))
-    
-    # Update and draw player
-    keys = pygame.key.get_pressed()
-    player.update(dt, keys)
-    player.draw()
+        # fill the screen with a color to wipe away anything from last frame
+        screen.blit(background, (0, 0))
+        
+        # Update and draw player
+        keys = pygame.key.get_pressed()
+        player.update(dt, keys)
+        player.draw()
 
-    # Update and draw all fishes
-    fish_list.update()
-    fish_list.draw(screen)
+        # Update and draw all fishes
+        fish_list.update()
+        fish_list.draw(screen)
 
-    # Update and draw all sharks
-    for shark in shark_list:
-        shark.update()
-        shark.animate()
-        shark.draw()
+        # Update and draw all sharks
+        for shark in shark_list:
+            shark.update()
+            shark.animate()
+            shark.draw()
 
-    # Check collision with fish
-    for fish in fish_list:
-        if fish.check_collision(player.player_rect):
-            print("Collision detected!")
-            fish_list.remove(fish)
-            score_manager.update('fish')
-            fish_sfx.play()
+        # Check collision with fish
+        for fish in fish_list:
+            if fish.check_collision(player.player_rect):
+                print("Collision detected!")
+                fish_list.remove(fish)
+                score_manager.update('fish')
+                fish_sfx.play()
 
-    # Check collision with player
-    for shark in shark_list:
-        # Retrieve player position
-        player_positionx = player.get_positionx()
-        player_positiony = player.get_positiony()
-        if shark.check_collision(player.player_mask, player_positionx, player_positiony):
-            print("Player eaten by shark!")
-            player.reset_position()
-            score_manager.update('shark')
-            shark_sfx.play()
+        # Check collision with player
+        for shark in shark_list:
+            # Retrieve player position
+            player_positionx = player.get_positionx()
+            player_positiony = player.get_positiony()
+            if shark.check_collision(player.player_mask, player_positionx, player_positiony):
+                print("Player eaten by shark!")
+                player.reset_position()
+                score_manager.update('shark')
+                shark_sfx.play()
 
-    # Draw the score
-    score_manager.draw()
+        # Draw the score
+        score_manager.draw()
 
-    # Game controls setup
-    keys = pygame.key.get_pressed()
+        # Game controls setup
+        keys = pygame.key.get_pressed()
 
 
-    # flip() the display to put your work on screen
-    pygame.display.flip()
+        # flip() the display to put your work on screen
+        pygame.display.flip()
 
-    # limits FPS to 60
-    # dt is delta time in seconds since last frame, used for framerate-
-    # independent physics.
-    dt = clock.tick(60) / 1000
-    fish_generation_timer += 1
+        # limits FPS to 60
+        # dt is delta time in seconds since last frame, used for framerate-
+        # independent physics.
+        dt = clock.tick(60) / 1000
+        fish_generation_timer += 1
 
-pygame.quit()
+        await asyncio.sleep(0)
+
+    pygame.quit()
+
+if __name__ == "__main__":
+    asyncio.run(main())

@@ -10,16 +10,16 @@ Created while attending MLH Global Hack Week Games
 * Royalty Free Sound Effects: Mixkit
 
 ### Play on Windows
-...
+Download `MushyWhaleGame.zip` and open `MushyWhaleGame.exe`
 
 ### Play on the Web
-...
+https://jot8ng.itch.io/feed-mushy-the-whale
 
 ## Getting Started:
 Install requirements.txt to install correct python version and pygame (I used Python 3.11.8)
-	```
-	pip install -r requirements.txt
-	```
+```
+pip install -r requirements.txt
+```
 
 Create Python Virtual Environment:
 Windows Powershell Terminal:
