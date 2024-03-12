@@ -82,7 +82,10 @@ while running:
 
     # Check collision with player
     for shark in shark_list:
-        if shark.check_collision(player.player_rect):
+        # Retrieve player position
+        player_positionx = player.get_positionx()
+        player_positiony = player.get_positiony()
+        if shark.check_collision(player.player_mask, player_positionx, player_positiony):
             print("Player eaten by shark!")
             player.reset_position()
             score_manager.update('shark')

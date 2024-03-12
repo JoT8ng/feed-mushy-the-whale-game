@@ -8,6 +8,7 @@ class Player:
         self.NUM_FRAMES = 2
         self.player_frames = [pygame.image.load(f"assets/frames/MushyCharacter_{i}.png") for i in range(self.NUM_FRAMES)]
         self.player_rect = self.player_frames[0].get_rect()
+        self.player_mask = pygame.mask.from_surface(self.player_frames[0])
         # Calculate the center of the screen
         self.screen_center_x = self.screen.get_width() // 2
         self.screen_center_y = self.screen.get_height() // 2
@@ -61,3 +62,11 @@ class Player:
     def reset_position(self):
         # Reset player position to the initial position
         self.player_rect.center = (self.screen_center_x, self.screen_center_y)
+
+    def get_positionx(self):
+        # Returns the current position of the player
+        return self.player_rect.x
+    
+    def get_positiony(self):
+        # Returns the current position of the player
+        return self.player_rect.y

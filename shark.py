@@ -9,6 +9,7 @@ class Shark(pygame.sprite.Sprite):
         self.NUM_FRAMES = 2
         self.shark_frames = [pygame.image.load(f"assets/frames/SharkCharacter_{i}.png") for i in range(self.NUM_FRAMES)]
         self.shark_rect = self.shark_frames[0].get_rect()
+        self.mask = pygame.mask.from_surface(self.shark_frames[0])
         self.shark_rect.x = random.randint(0, screen.get_width() - self.shark_rect.width)
         self.shark_rect.y = random.randint(0, screen.get_height() - self.shark_rect.height)
         self.speedx = random.randint(-5, 5)
@@ -56,6 +57,16 @@ class Shark(pygame.sprite.Sprite):
             flipped_player_image = pygame.transform.flip(self.shark_image, True, False)
             self.screen.blit(flipped_player_image, self.shark_rect)
 
-    def check_collision(self, player_rect):
-        # Check collision with the player's rect
-        return self.shark_rect.colliderect(player_rect)
+    def check_collision(self, player_mask, player_positionx, player_positiony):
+        # Get the offset between the player and the shark
+        offset_x = player_positionx - self.shark_rect.x
+        offset_y = player_positiony - self.shark_rect.y
+
+        # Check if the player mask overlaps with the shark mask
+        overlap_area = self.mask.overlap(player_mask, (offset_x, offset_y))
+
+        # If there is an overlap, return True
+        if overlap_area:
+            return True
+        else:
+            return False
