@@ -35,6 +35,10 @@ for _ in range(2):
     shark = Shark(screen)
     shark_list.add(shark)
 
+# Load sound
+fish_sfx = pygame.mixer.Sound("assets/sound/mixkit-player-jumping-in-a-video-game-2043.wav")
+shark_sfx = pygame.mixer.Sound("assets/sound/mixkit-arcade-retro-jump-223.wav")
+
 # Show title screen
 show_title_screen(screen, clock)
 
@@ -74,6 +78,7 @@ while running:
             print("Collision detected!")
             fish_list.remove(fish)
             score_manager.update('fish')
+            fish_sfx.play()
 
     # Check collision with player
     for shark in shark_list:
@@ -81,6 +86,7 @@ while running:
             print("Player eaten by shark!")
             player.reset_position()
             score_manager.update('shark')
+            shark_sfx.play()
 
     # Draw the score
     score_manager.draw()

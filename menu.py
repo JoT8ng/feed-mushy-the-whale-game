@@ -9,6 +9,9 @@ def show_title_screen(screen, clock):
     start_text = start_font.render("Press Enter to Start", True, (255, 255, 255))
     keys_text = keys_font.render("Use 'W 'A' 'S' 'D' keys on your keyboard to move", True, (255, 255, 255))
 
+    # Load sound
+    start_sfx = pygame.mixer.Sound("assets/sound/mixkit-unlock-new-item-game-notification-254.wav")
+
     title_screen_running = True
 
     while title_screen_running:
@@ -18,6 +21,7 @@ def show_title_screen(screen, clock):
                 quit()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
+                    start_sfx.play()
                     title_screen_running = False
 
         screen.fill((67, 129, 142))
